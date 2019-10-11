@@ -23,12 +23,25 @@ RUN apt-get install vim -y
 
 RUN apt-get install wget -y
 
+RUN apt-get install jsdoc-toolkit -y
+
 RUN apt-get build-dep csound -y 
 
 
+#setting um emsdk
+
+RUN git clone git clone https://github.com/emscripten-core/emsdk.git
+RUN cd emsdk/
+RUN git pull
+RUN ./emsdk install latest
+RUN ./emsdk activate latest
+RUN cd ..
+
+
+
 #Running build commands once container starts
-
-CMD git clone https://github.com/csound/csound.git && mkdir cs6make && cd cs6make && cmake ../csound && make -j6 && make install
-
+CMD git clone https://github.com/csound/csound.git && cd /home/csound/Emscripten && ./download_and_build_libsndfile.sh && ./build.sh && ./release.sh
 
 ENV DEBIAN_FRONTEND teletype
+
+
