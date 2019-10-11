@@ -26,26 +26,7 @@ RUN apt-get build-dep csound -y
 
 #Running build commands once container starts
 
-CMD ["echo", "I am working"]
-
-CMD ["cd","~"]
-
-CMD ["mkdir", "csound"]
-
-CMD ["cd", "csound"]
-
-CMD ["git","clone", "https://github.com/csound/csound.git", "csound"]
-
-CMD ["mkdir", "cs6make"]
-
-CMD ["cd","cs6make"]
-
-CMD ["cmake", "../csound"]
-
-CMD ["make", "j6"]
-
-CMD ["make", "install"]
+CMD git clone https://github.com/csound/csound.git && mkdir cs6make && cd cs6make && cmake ../csound && make -j6 && make install
 
 
 ENV DEBIAN_FRONTEND teletype
-
