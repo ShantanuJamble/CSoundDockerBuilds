@@ -1,8 +1,11 @@
 #specify the base OS
-From ubuntu:16.04
+
+FROM ubuntu:16.04
 
 #Running apt updates on OS
 ENV DEBIAN_FRONTEND noninteractive
+
+SHELL ["/bin/bash", "-c"]
 
 RUN sed -i -- 's/#deb-src/deb-src/g' /etc/apt/sources.list && sed -i -- 's/# deb-src/deb-src/g' /etc/apt/sources.list
 
@@ -20,7 +23,7 @@ RUN apt-get install cmake -y
 RUN apt-get install g++ -y
 
 RUN apt-get install vim -y
-
+ 
 RUN apt-get install wget -y
 
 RUN apt-get install jsdoc-toolkit -y
@@ -28,19 +31,12 @@ RUN apt-get install jsdoc-toolkit -y
 RUN apt-get build-dep csound -y 
 
 
-#setting um emsdk
-
+#setting up emsdk 
 RUN git clone https://github.com/emscripten-core/emsdk.git
-RUN cd emsdk/
-RUN git pull
-RUN ./emsdk install latest
-RUN ./emsdk activate latest
-RUN cd ..
-
-
 
 #Running build commands once container starts
-CMD git clone https://github.com/csound/csound.git && cd /home/csound/Emscripten && ./download_and_build_libsndfile.sh && ./build.sh && ./release.sh
+CMD ["/bin/bash" , "-c" , "cd emsdk/ && git pull && ./emsdk install latest && ./emsdk activate latest && source ./emsdk_env.sh && git clone https://github.com/csound/csound.git && cd csound/Emscripten && ./download_and_build_libsndfile.sh && ./build.sh && ./update_example_libs_from_dist.sh &&  ./release.sh"]
+
 
 ENV DEBIAN_FRONTEND teletype
 
